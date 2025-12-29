@@ -314,7 +314,17 @@ async function handleUIChanges(): Promise<void> {
   const inputAreaButton = $(
     `<div id="roadway_input_button" title="Generate Roadway for last message" class="fa-solid fa-road interactable" tabindex="0"></div>`,
   );
-  $('#nonQRFormItems').after(inputAreaButton);
+
+  // Try to integrate with GuidedGenerations container if it exists, otherwise create our own
+  const ggContainer = $('#gg-regular-buttons-container');
+  if (ggContainer.length) {
+    ggContainer.prepend(inputAreaButton);
+  } else {
+    // Create a styled container similar to GuidedGenerations
+    const container = $(`<div id="roadway-input-container"></div>`);
+    container.append(inputAreaButton);
+    $('#nonQRFormItems').after(container);
+  }
 
   const pendingRequests = new Set<number>();
 
