@@ -387,6 +387,7 @@ async function handleUIChanges(): Promise<void> {
         settings.profileId,
         messages,
         settings.maxResponseToken,
+        { includePreset: true },
       )) as ExtractedData;
 
       let actions: string[] = [];
