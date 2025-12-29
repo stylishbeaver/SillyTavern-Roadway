@@ -312,7 +312,7 @@ async function handleUIChanges(): Promise<void> {
 
   // Add roadway button to input area
   const inputAreaButton = $(
-    `<div id="roadway_input_button" title="Generate Roadway for last message" class="fa-solid fa-road interactable" tabindex="0"></div>`,
+    `<div id="roadway_input_button" title="Generate Roadway for last message" class="interactable" tabindex="0"><i class="fa-solid fa-road"></i></div>`,
   );
 
   // Try to integrate with GuidedGenerations container if it exists, otherwise create our own

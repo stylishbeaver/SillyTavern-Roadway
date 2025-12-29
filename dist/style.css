@@ -25,7 +25,7 @@
   background-color: var(--SmartThemeHover);
   color: var(--SmartThemeUi);
 }
-#roadway_input_button.spinning {
+#roadway_input_button.spinning i {
   animation: spin 2s linear infinite;
 }
 

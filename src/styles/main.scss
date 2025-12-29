@@ -28,7 +28,7 @@
         color: var(--SmartThemeUi);
     }
 
-    &.spinning {
+    &.spinning i {
         animation: spin 2s linear infinite;
     }
 }
