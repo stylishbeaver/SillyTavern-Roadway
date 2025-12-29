@@ -414,6 +414,7 @@ async function handleUIChanges(): Promise<void> {
           [KEYS.EXTRA.TARGET]: targetMessageId,
           [KEYS.EXTRA.RAW_CONTENT]: innerText,
           [KEYS.EXTRA.OPTIONS]: actions,
+          reasoning: rest.reasoning,
         },
       };
 
@@ -421,6 +422,7 @@ async function handleUIChanges(): Promise<void> {
         newMessage.mes = formatResponse(innerText, extractionStrategy === 'bullet' ? actions : undefined);
         newMessage.extra![KEYS.EXTRA.RAW_CONTENT] = rest.content;
         newMessage.extra![KEYS.EXTRA.OPTIONS] = actions;
+        newMessage.extra!.reasoning = rest.reasoning;
         const detailsElement = $(`[mesid="${targetMessageId + 1}"] .mes_text`);
         detailsElement.html(
           formatResponse(innerText, extractionStrategy === 'bullet' ? actions : undefined, 'custom-'),
