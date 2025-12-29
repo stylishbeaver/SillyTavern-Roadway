@@ -492,7 +492,9 @@ async function handleUIChanges(): Promise<void> {
 }
 
 function extractBulletPoints(text: string): string[] {
-  const matches = text.match(/^(?:\d+\.(?:\s+|(?=\S))|-\s+)(.*)$/gm) || [];
+  // Strip out any <think></think> blocks to avoid extracting bullets from model reasoning
+  const cleanedText = text.replace(/<think>[\s\S]*?<\/think>/gi, '');
+  const matches = cleanedText.match(/^(?:\d+\.(?:\s+|(?=\S))|-\s+)(.*)$/gm) || [];
   return matches.map((line) => {
     return line.replace(/^(?:\d+\.(?:\s+|(?=\S))|-\s+)/, '').trim();
   });
