@@ -309,8 +309,16 @@ async function handleUIChanges(): Promise<void> {
     `<div title="Generate Roadway" class="mes_button mes_magic_roadway_button fa-solid fa-road interactable" tabindex="0"></div>`,
   );
   $('#message_template .mes_buttons .extraMesButtons').prepend(roadwayButton);
+
+  // Add roadway button to input area
+  const inputAreaButton = $(
+    `<div id="roadway_input_button" title="Generate Roadway for last message" class="fa-solid fa-road interactable" tabindex="0"></div>`,
+  );
+  $('#nonQRFormItems').after(inputAreaButton);
+
   const pendingRequests = new Set<number>();
-  $(document).on('click', '.mes_magic_roadway_button', async function () {
+
+  async function generateRoadway(targetMessageId: number): Promise<void> {
     const context = SillyTavern.getContext();
     if (!settings.profileId) {
       await st_echo('error', 'Please select a connection profile first in the settings.');
@@ -320,8 +328,6 @@ async function handleUIChanges(): Promise<void> {
       await st_echo('error', 'Please enter a prompt first in the settings.');
       return;
     }
-    const messageBlock = $(this).closest('.mes');
-    const targetMessageId = Number(messageBlock.attr('mesid'));
     const profile = context.extensionSettings.connectionManager?.profiles?.find(
       (profile) => profile.id === settings.profileId,
     );
@@ -343,7 +349,7 @@ async function handleUIChanges(): Promise<void> {
       }
 
       pendingRequests.add(targetMessageId);
-      $(this).addClass('spinning');
+      $('.mes_magic_roadway_button, #roadway_input_button').addClass('spinning');
 
       const promptResult = await buildPrompt(apiMap?.selected!, {
         targetCharacterId: characterId,
@@ -425,8 +431,28 @@ async function handleUIChanges(): Promise<void> {
       await st_echo('error', `Error: ${error}`);
     } finally {
       pendingRequests.delete(targetMessageId);
-      $('.mes_magic_roadway_button').removeClass('spinning');
+      $('.mes_magic_roadway_button, #roadway_input_button').removeClass('spinning');
     }
+  }
+
+  $(document).on('click', '.mes_magic_roadway_button', async function () {
+    const messageBlock = $(this).closest('.mes');
+    const targetMessageId = Number(messageBlock.attr('mesid'));
+    await generateRoadway(targetMessageId);
+  });
+
+  inputAreaButton.on('click', async () => {
+    const context = SillyTavern.getContext();
+    if (!context.chat.length) {
+      return;
+    }
+    // Find the last non-roadway message
+    let targetMessageId = context.chat.length - 1;
+    const lastMessage = context.chat[targetMessageId];
+    if (typeof lastMessage.extra?.[KEYS.EXTRA.TARGET] === 'number') {
+      targetMessageId = lastMessage.extra[KEYS.EXTRA.TARGET];
+    }
+    await generateRoadway(targetMessageId);
   });
 
   function formatResponse(response: string, options?: string[], classPrefix = ''): string {

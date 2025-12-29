@@ -2,6 +2,22 @@
     white-space: pre-wrap;
 }
 
+#roadway_input_button {
+    padding: 3px 5px;
+    cursor: pointer;
+    font-size: 1.2em;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+
+    &:hover {
+        opacity: 1;
+    }
+
+    &.spinning {
+        animation: spin 2s linear infinite;
+    }
+}
+
 @keyframes spin {
     from {
         transform: rotate(0deg);
